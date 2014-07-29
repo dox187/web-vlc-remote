@@ -1,4 +1,4 @@
-# VLC
+# web-vlc-remote
 
 
 ## Intro
