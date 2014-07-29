@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html ng-app="VLC">
+	<head>
+		<title>VLC</title>
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="viewport" content="user-scalable=no, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0" />
+
+		<link rel="shortcut icon" href="favicon.ico">
+
+		<script src="bower_components/angular/angular.min.js"></script>
+		<script src="bower_components/ngstorage/ngStorage.min.js"></script>
+		<script src="app.js"></script>
+
+		<link rel="stylesheet" href="bower_components/lungo/lungo.css">
+		<link rel="stylesheet" href="bower_components/lungo/lungo.icon.css">
+		<link rel="stylesheet" href="bower_components/lungo/lungo.theme.css">
+
+		<style>
+			/* hide scrollbars in webkit-based browsers */
+			::-webkit-scrollbar {
+				display: none;
+			}
+		</style>
+	</head>
+
+	<body>
+		<section id="main" data-transition="slide" ng-controller="VLCController">
+			<header>
+				<img src="favicon.ico" class="title centered">
+			</header>
+
+			<article id="main-article" class="list indenteds" data-ng-init="request_status()">
+				<div class="form">
+					<ul>
+						<li style="text-align: center;">
+							<span class="text bold">&nbsp;{{status.information.category.meta.filename}}</span>
+						</li>
+					</ul>
+
+					<div class="layout horizontal">
+						<button class="disabled" data-label="{{status.time / 60 | floor}}:{{status.time % 60 | zeropad: 2}}"></button>
+						<fieldset>
+							<input type="range" min="0" max="{{status.length}}" ng-model="status.time" ng-change="seek();" ng-model-options="{ updateOn: 'change' }">
+						</fieldset>
+						<button class="disabled" data-label="{{status.length / 60 | floor}}:{{status.length % 60 | zeropad: 2}}"></button>
+					</div>
+
+					<p class="margin bottom" style="text-align: center; background: white;">
+						<a class="button large" data-icon="step-backward" ng-click="previous();"></a>
+						<a class="button large" data-icon="play" ng-if="status.state != 'playing'" ng-click="togglePlay();"></a>
+						<a class="button large" data-icon="pause" ng-if="status.state == 'playing'" ng-click="togglePlay();"></a>
+						<a class="button large" data-icon="stop" ng-click="stop();"></a>
+						<a class="button large" data-icon="step-forward" ng-click="next();"></a>
+						<a class="button large" data-icon="fullscreen" ng-click="toggleFullscreen();"></a>
+					</p>
+
+					<div class="layout horizontal">
+						<button class="disabled" style="height: 37px; background: white;" data-icon="volume-down"></button>
+						<div data-layout="primary">
+							<fieldset>
+								<input type="range" min="0" max="320" ng-model="status.volume" ng-change="volume();" ng-model-options="{ updateOn: 'change' }">
+							</fieldset>
+						</div>
+						<button class="disabled" style="height: 37px; background: white;" data-icon="volume-up"></button>
+					</div>
+				</div>
+			</article>
+
+			<article id="playlist-article" class="list indenteds scroll" data-ng-init="request_playlist()">
+				<ul>
+					<li ng-repeat="file in playlist.children[0].children" ng-click="">
+						<a data-icon="file"></a>
+						<span class="text tiny">{{file.name}}</span>
+					</li>
+				</ul>
+			</article>
+			
+			<article id="browser-article" class="list indenteds scroll" data-ng-init="request_browse()">
+				<nav data-control="groupbar">
+					<a href="" data-icon="home" ng-click="request_browse('/')"></a>
+					<a href="" data-icon="hdd" ng-click="request_browse()"></a>
+					<!--
+					<a href="" data-icon="arrow-up"></a>
+					<a href="" data-icon="arrow-left"></a>
+					<a href="" data-icon="arrow-right"></a>
+					-->
+				</nav>
+
+				<div class="form">
+					<fieldset data-icon="search">
+	                	<input type="search" ng-model="search">
+	            	</fieldset>
+            	</div>
+
+				<ul>
+					<li ng-repeat="file in files.element | orderBy: ['type', 'name'] | filter: { name: search }" ng-click="open(file);">
+						<a ng-if="file.type == 'file'" data-icon="file"></a>
+						<a ng-if="file.type == 'dir'" data-icon="folder-open"></a>
+						<span class="text tiny">{{file.name}}</span>
+					</li>
+				</ul>
+			</article>
+			
+			<article id="settings-article" class="list indenteds scroll">
+				<div class="form">
+					<fieldset>
+						<label>Method</label>
+						<label class="select">
+							<select ng-model="settings.method">
+								<option value="get">GET</option>
+								<option value="jsonp">JSONP</option>
+							</select>
+						</label>
+						<label>Host</label>
+						<input type="text" class="large text" ng-model="settings.host">
+						<label>Port</label>
+						<input type="text" class="large text" placeholder="8080" ng-model="settings.port">
+						<label>Password</label>
+						<input type="password" ng-model="settings.password">
+					</fieldset>
+				</div>
+			</article>
+
+			<footer>
+				<nav>
+					<a data-view-article="main-article" data-icon="dashboard"></a>
+					<a data-view-article="playlist-article" data-icon="list"></a>
+					<a data-view-article="browser-article" data-icon="folder-open"></a>
+					<a data-view-article="settings-article" data-icon="cog"></a>
+				</nav>
+			</footer>
+		</section>
+
+		<script src="bower_components/quojs/quo.js"></script>
+		<script src="bower_components/lungo/lungo.js"></script>
+		<script>
+			Lungo.init({});
+		</script>
+	</body>
+</html>

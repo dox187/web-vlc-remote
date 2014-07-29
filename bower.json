@@ -1,0 +1,14 @@
+{
+  "name": "web-vlc-remote",
+  "version": "1.0.0",
+  "description": "My personal WebUI for VLC Media Player.",
+  "main": "index.html",
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+    "quojs": "2.3.x",
+    "lungo": "2.2.x",
+    "angular": "1.3.x",
+    "ngstorage": "~0.3.x"
+  }
+}
