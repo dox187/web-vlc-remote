@@ -34,6 +34,7 @@ Navigate to the settings tab to configure remote VLC player to connect to.
 
 ### Method
 GET - Use where same-origin policy can be bypassed e.g. WebView
+
 JSONP - Requires modifications to VLC lua scripts to support json callback. Save and restart VLC.
 
 status.json, browse.json & playlist.json:
